@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="34b8b11f-1ab6-441a-9cc3-3ef8a5c55364" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="c107bf98-27b0-460d-a204-1ccd9f5451bc" >
+		<jms:active-mq-connection username="admin" password="admin" >
+			<jms:factory-configuration brokerUrl="tcp://LAPTOP-LMO9CNB3:61616" />
+		</jms:active-mq-connection>
+	</jms:config>
+	<jms:config name="JMS_Config1" doc:name="JMS Config" doc:id="9839f93d-46fa-40de-a90c-18a38662c41e" >
+		<jms:active-mq-connection >
+			<jms:factory-configuration brokerUrl="tcp://LAPTOP-LMO9CNB3:61616" />
+		</jms:active-mq-connection>
+	</jms:config>
+	<flow name="firstappFlow" doc:id="9516d608-b4f4-457b-bcef-45f598de3182" >
+		<http:listener doc:name="Listener" doc:id="1589b99c-7568-4c68-8832-ec76823074c5" config-ref="HTTP_Listener_config" path="/firstApp"/>
+		<file:read doc:name="Read" doc:id="e51503ad-2441-404f-a4aa-912e6d7d51ea" path="C:\Users\Srinu\AnypointStudio\studio-workspace2\firstapp\src\test\resources\input\input.json"/>
+		<logger level="INFO" doc:name="Logger" doc:id="bcafce01-a2bb-4905-8cb6-8964170f0d11" message="inputdata:::::::::#[payload]" />
+		<jms:publish doc:name="Publish" doc:id="132d4ab5-08c5-481e-ac34-67608a8446b0" config-ref="JMS_Config1" destination="myTestQ" />
+		<ee:transform doc:name="Transform Message" doc:id="8e8751fc-96eb-452a-8571-d9b58ac356d2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+ student: payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="33e656ec-9237-4e1c-a2eb-c41c6556b311" message="output::::::::#[payload]"/>
+		<file:write doc:id="40fbfc55-f470-4559-9971-1b2034abd8ea" path="C:\Users\Srinu\AnypointStudio\studio-workspace2\firstapp\src\test\resources\output\output.xml"/>
+	</flow>
+</mule>
