@@ -25,6 +25,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 		<file:read doc:name="Read" doc:id="e51503ad-2441-404f-a4aa-912e6d7d51ea" path="C:\Users\Srinu\AnypointStudio\studio-workspace2\firstapp\src\test\resources\input\input.json"/>
 		<logger level="INFO" doc:name="Logger" doc:id="bcafce01-a2bb-4905-8cb6-8964170f0d11" message="inputdata:::::::::#[payload]" />
 		<jms:publish doc:name="Publish" doc:id="132d4ab5-08c5-481e-ac34-67608a8446b0" config-ref="JMS_Config1" destination="myTestQ" />
+		<logger level="INFO" doc:name="Logger" doc:id="62baaba2-3bac-43c0-bfd2-cd7779453e2d" message="dummyLogger........"/>
 		<ee:transform doc:name="Transform Message" doc:id="8e8751fc-96eb-452a-8571-d9b58ac356d2" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
